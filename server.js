@@ -6,7 +6,7 @@ let socket = require("socket.io");
 
 let app = express();
 
-var port = process.env.PORT || 2000;
+var port = process.env.PORT || 3000;
 
 let server = app.listen(port);
 
@@ -21,7 +21,6 @@ function newConnection(socket) {
 
   socket.emit("color", getRandomColor());
   socket.on("mouse", mouseMessage);
-  socket.on("timer", mouseMessage);
 
   function mouseMessage(data) {
     //console.log(socket.client.id, data);
