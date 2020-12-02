@@ -2,7 +2,7 @@ let socket = io();
 let myColor = "white";
 var seconds, minutes;
 var timer;
-var counter = 5;
+var counter = 25;
 let image;
 let tickingSound;
 let almostOverSound;
