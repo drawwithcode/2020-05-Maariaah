@@ -2,11 +2,12 @@ let socket = io();
 let myColor = "white";
 var seconds, minutes;
 var timer;
-var counter = 30;
+var counter = 5;
 let image;
 let tickingSound;
 let almostOverSound;
 let finishSound;
+let replayButton;
 var data = [
   "BANANA",
   "PHONE",
@@ -18,7 +19,7 @@ var data = [
   "TRUCK",
 ];
 var object;
-var turn;
+let turn;
 let eraseEnable = false;
 
 socket.on("connection", newConnection);
@@ -46,15 +47,17 @@ function drawOtherMouse(data) {
 function preload() {}
 
 function setup() {
+  turn = data.length - 1;
   timer = createP("timer");
   tickingSound = loadSound("./sounds/tspt_alarm_clock_ticking_loop_002.mp3");
   almostOverSound = loadSound("./sounds/mixkit-vintage-warning-alarm-990.wav");
   finishSound = loadSound("./sounds/emergency_bell_alarm_small_ring.mp3");
   tasksText = createP("tasksText");
-  turn = data.length - 1;
   toggleBtn = createButton("Eraser");
   toggleBtn.position(42, 100);
   toggleBtn.mouseClicked(toggleErase);
+  replayButton = createButton("Replay");
+  muteButton = createButton("Turn off the f*****g sound!");
   createCanvas(windowWidth, windowHeight);
   background("black");
 }
@@ -76,6 +79,17 @@ function toggleErase() {
   } else {
     eraseEnable = true;
   }
+}
+
+//Replay game
+function resetGame() {
+  counter = 30;
+  turn = data.length - 1;
+  clear();
+  replayButton.hide();
+  muteButton.hide();
+  finishSound.stop();
+  background("black");
 }
 
 //timer
@@ -114,8 +128,9 @@ const myTimer = setInterval(function myTimer() {
   if (turn !== 0) {
     //Reset timer
     if (counter === 0) {
-      counter = 30;
+      counter = 25;
       turn--;
+      save('coolDrawing.jpg');
       clear();
       background("black");
     }
@@ -123,10 +138,15 @@ const myTimer = setInterval(function myTimer() {
     //Stop the timer
     clearInterval(myTimer);
     myTimer = 0;
+
     if (counter === 0) {
-      tasksText.html("Thank you for playing the game");
+      tasksText.html("Nice drawing skills! Wanna play again?");
+      tasksText.position(42, 300);
       almostOverSound.stop();
       finishSound.play();
+      replayButton.show();
+      replayButton.position(42, 370);
+      replayButton.mouseClicked(resetGame);
     }
   }
 }, 500);
